@@ -1,0 +1,27 @@
+{
+  "name": "jquery-flip",
+  "version": "0.0.1",
+  "homepage": "https://github.com/finebraincom/jquery-flip",
+  "authors": [
+    "Iurii Kyian (Finebrain AG)"
+  ],
+  "description": "jQuery page flipping plugin",
+  "main": "jquery.mobile.flip.js",
+  "keywords": [
+    "browser",
+    "page",
+    "flip"
+  ],
+  "dependencies" : {
+    "jquery" : "1.8.3"
+  },
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
