@@ -85,8 +85,8 @@
   Flip.prototype._initShadow = function() {
     var $elem = $(this.element);
     var $cur = $elem.children(CLASS_CURRENT);
-    var elemWidth = $cur.width();
-    var elemHeight = $cur.height();
+    var elemWidth = $cur.outerWidth();
+    var elemHeight = $cur.outerHeight();
 
     var $flipShadow = $('<div class="flipShadow"></div>').hide();
     $flipShadow.css('position', 'absolute')
@@ -116,14 +116,14 @@
   Flip.prototype._isVertical = function() {
     return (this.options.forwardDir === DIR_TTOB ||
                       this.options.forwardDir === DIR_BTOT) ? true : false;
-  }
+  };
 
   Flip.prototype._splitElem = function($elem, customClass) {
 
     var $flipRoot = $(this.element);
     if ($elem === null || $elem.length === 0) {
-      var rootWidth = $flipRoot.width();
-      var rootHeight = $flipRoot.height();
+      var rootWidth = $flipRoot.outerWidth();
+      var rootHeight = $flipRoot.outerHeight();
 
       if (this.options.showPager) {
         var $pager = $flipRoot.children('.pager');
@@ -174,8 +174,8 @@
     });
 
     // adjust widht/height
-    var elemWidth = $elem.width();
-    var elemHeight = $elem.height();
+    var elemWidth = $elem.outerWidth();
+    var elemHeight = $elem.outerHeight();
 
     // for first half element
     if (isVertical) {
@@ -194,7 +194,7 @@
       $firstHalf.children(':first')
       .css('width', elemWidth + 'px')
       .css('display', 'block');
-    }
+    };
 
 
     // for second half element
@@ -229,13 +229,13 @@
     }
 
     return {first: $firstHalf, second: $secondHalf};
-  }
+  };
 
   Flip.prototype.init = function(flippingSide) {
     // this.currentRatio must be null
     if (this.currentRatio !== null) {
       return;
-    }
+    };
 
     // init currentRatio value
     this.currentRatio = 0;
@@ -246,7 +246,7 @@
     // find currently shown element
     var $cur = $elem.children(CLASS_CURRENT);
     var $underContent = null;
-    var $flippingElem = null
+    var $flippingElem = null;
     var $flippingBackElem = null;
 
     if (this.options.forwardDir === DIR_LTOR && flippingSide === _FIRST_HALF ||
@@ -256,7 +256,7 @@
       $underContent = this.getNextContent($cur);
     } else {
       $underContent = this.getPrevContent($cur);
-    }
+    };
 
     var back = this._splitElem($underContent, 'back');
     var front = this._splitElem($cur, 'front');
@@ -308,7 +308,7 @@
     $cur.addClass('working');
 
     $flipShadow.show();
-  }
+  };
 
   Flip.prototype.step = function(ratio) {
     var $working = $(this.element).children('.working');
@@ -331,7 +331,7 @@
     var formula = function(p) {
       var factor = 1.2;
       return -1 * factor * (p - 1) * (p - 1) + factor;
-    }
+    };
 
     var $elem = $(this.element);
     var elemHeight = $flipping.height();
@@ -395,7 +395,7 @@
       flipShadowRatio = Math.max(0, 1 - formula((degree) / 90));
       $('.flipShadow').css('opacity', 0.9 * flipShadowRatio);
     }
-  }
+  };
 
   Flip.prototype._calculateFlipRotateCSS = function (ratio)
   {
@@ -404,7 +404,7 @@
     } else {
        return 'rotateY(' + (180 * ratio) + 'deg)';
     }
-  }
+  };
 
   Flip.prototype._calculateBackFlipRotateCSS = function(ratio)
   {
@@ -421,7 +421,7 @@
         return 'rotateY(' + (-1 * (180 - (180 * ratio))) + 'deg)';
       }
     }
-  }
+  };
 
 
   Flip.prototype.actionBK = function(to) {
@@ -450,7 +450,7 @@
     // add event listener to remove animation after animation finished
 
 
-  }
+  };
 
   // This can be done by complete css animation. That should be faster.
   Flip.prototype.action = function(to) {
@@ -476,14 +476,14 @@
       // simple version of quadratic easeOut
       t = Math.abs(t) / d;
       return -1 * c * t * (t - 2) + b;
-    }
+    };
 
     var formula = function(t) {
       // simple version of cubic easeOut
       t = Math.abs(t) / d;
       t = t - 1;
       return c * (t * t * t + 1) + b;
-    }
+    };
 
     if (to === 0) {
       // replace start and end so that same logic can be used
@@ -491,8 +491,9 @@
     }
 
     var loop = function() {
+    	var STEP = 0.05;
       // to next step
-      x = Math.min(1, x + 0.05);
+      x = Math.min(1, x + STEP);
       var y = Math.min(1.0, formula(x));
       if (endRatio === 0) {
         // set next ratio to the reverse direction
@@ -507,7 +508,7 @@
       _this.step(y);
 
       // call until ratio is 1
-      if (x + 0.05 < d) {
+      if (x + STEP < d) {
         setTimeout(loop, 20);
       } else {
         // to omit last step
@@ -516,11 +517,11 @@
         // end callback
         _this.cleanup();
       }
-    }
+    };
 
     this.isInAnimation = true;
     loop();
-  }
+  };
 
   Flip.prototype.cleanup = function() {
 
@@ -563,7 +564,7 @@
     this.currentRatio = null;
     this.flippingSide = null;
     this.isInAnimation = false;
-  }
+  };
 
   Flip.prototype.getNextContent = function($current) {
 
@@ -574,7 +575,7 @@
     }
 
     return ($nextCurrent.length === 0) ? $() : $nextCurrent;
-  }
+  };
 
   Flip.prototype.getPrevContent = function($current) {
     var $prevCurrent = $current.prev('.flipContent');
@@ -584,7 +585,7 @@
     }
 
     return ($prevCurrent.length === 0) ? $() : $prevCurrent;
-  }
+  };
 
   Flip.prototype.shouldTransitionContinue = function(ratio, context) {
     var td1 = 1, td2 = 1;
@@ -622,7 +623,7 @@
     }
 
     return (Math.abs(ratio) > this.THREASHOLD_RATIO);
-  }
+  };
 
   function Slide(element, options) {
     this.element = element;
@@ -645,9 +646,9 @@
 
     if (this.options.forwardDir === DIR_RTOL ||
         this.options.forwardDir === DIR_LTOR) {
-      this.MAX_DISTANCE = $(this.element).width();
+      this.MAX_DISTANCE = $(this.element).outerWidth();
     } else {
-      this.MAX_DISTANCE = $(this.element).height();
+      this.MAX_DISTANCE = $(this.element).outerHeight();
     }
 
     this.THREASHOLD_RATIO = Math.min(0.15, 100 / this.MAX_DISTANCE);
@@ -693,8 +694,8 @@
       $elem.append($slidingBg.append($cur.clone()));
     }
 
-    $slidingBg.css('width', $cur.width() + 'px');
-    $slidingBg.css('height', $cur.height() + 'px');
+    $slidingBg.css('width', $cur.outerWidth() + 'px');
+    $slidingBg.css('height', $cur.outerHeight() + 'px');
     $slidingBg.children(':first').css('display', 'block');
 
     var $sliding = $('.sliding');
@@ -710,8 +711,8 @@
       $elem.append($sliding.append($nextContent.clone()));
     }
 
-    $sliding.css('width', $cur.width() + 'px')
-            .css('height', $cur.height() + 'px')
+    $sliding.css('width', $cur.outerWidth() + 'px')
+            .css('height', $cur.outerHeight() + 'px')
             .css('zIndex', FLIPPING_BASE_ZINDEX);
 
     if (!isNext) {
@@ -745,7 +746,7 @@
     $slidingBg.show();
 
     //$slideShadow.show();
-  }
+  };
 
   Slide.prototype.step = function(ratio) {
     this.currentRatio = ratio;
@@ -790,7 +791,7 @@
         }
         break;
     }
-  }
+  };
 
   Slide.prototype.action = function(to) {
     var endRatio = to;
@@ -818,11 +819,11 @@
         // end callback
         _this.cleanup();
       }
-    }
+    };
 
     this.isInAnimation = true;
     loop();
-  }
+  };
 
   Slide.prototype.cleanup = function() {
     var $elem = $(this.element);
@@ -861,7 +862,7 @@
     this.currentRatio = null;
     this.slideSide = null;
     this.isInAnimation = false;
-  }
+  };
 
   Slide.prototype.getNextContent = function($current) {
     var $nextCurrent = $current.next('.flipContent');
@@ -871,7 +872,7 @@
     }
 
     return ($nextCurrent.length === 0) ? $() : $nextCurrent;
-  }
+  };
 
   Slide.prototype.getPrevContent = function($current) {
     var $prevCurrent = $current.prev('.flipContent');
@@ -881,7 +882,7 @@
     }
 
     return ($prevCurrent.length === 0) ? $() : $prevCurrent;
-  }
+  };
 
   Slide.prototype.shouldTransitionContinue = function(ratio, context) {
 
@@ -889,7 +890,7 @@
 
     // static check, TODO: should be more complicated
     return (Math.abs(ratio) > this.THREASHOLD_RATIO);
-  }
+  };
 
 
   // The actual plugin constructor
@@ -936,7 +937,7 @@
     // check element data- attribute for jqm initialization
     var $elem = $(this.element);
 
-    if ($.mobile.ns) {
+    if ($.mobile && $.mobile.ns) {
       _NS = $.mobile.ns;
     }
 
@@ -951,7 +952,7 @@
         }
       }
     }
-  }
+  };
 
   Plugin.prototype.isFlipSupported = function() {
     var ua = $.browser;
@@ -965,7 +966,7 @@
     }
 
     return false;
-  }
+  };
 
   /**
    * @return {Object} mouse object.
@@ -1000,7 +1001,7 @@
     diff = diff - (this.effect.START_OFFSET * sign);
 
     return diff;
-  }
+  };
 
   Plugin.prototype._getClientMousePos = function(event) {
     if (event.clientX === null && event.originalEvent) {
@@ -1008,7 +1009,7 @@
     } else {
       return {x: event.clientX, y: event.clientY};
     }
-  }
+  };
 
   Plugin.prototype.vmousedown = function(event) {
 
@@ -1030,7 +1031,7 @@
     this._clickContext.tList = [];
 
     return true;
-  }
+  };
 
   Plugin.prototype._getRatio = function(diff) {
     var ratio = diff / this.effect.MAX_DISTANCE;
@@ -1043,7 +1044,7 @@
     }
 
     return ratio;
-  }
+  };
 
 
   Plugin.prototype._pushMouseInfo = function(mousePos) {
@@ -1085,7 +1086,7 @@
     this._clickContext.lastInfo = {x: mousePos.x, y: mousePos.y, time: now};
 
     return true;
-  }
+  };
 
   Plugin.prototype.vmousemove = function(event) {
     if (this._clickContext.downPt === null) {
@@ -1115,7 +1116,7 @@
 
     event.preventDefault();
     return false;
-  }
+  };
 
   Plugin.prototype.flipPrev = function() {
     if (this._clickContext.flipside !== null) {
@@ -1140,7 +1141,7 @@
     // } else {
       // TODO: implement some animation to indicate the first page
     }
-  }
+  };
 
   Plugin.prototype.flipNext = function() {
     if (this._clickContext.flipside !== null) {
@@ -1165,7 +1166,7 @@
     //} else {
       // TODO: implement some animation to indicate the last page
     }
-  }
+  };
 
   Plugin.prototype._getCleanupFunc = function($nextCurrent) {
     var _this = this;
@@ -1191,8 +1192,8 @@
         // invoke original callback
         origFunc(idx);
       }
-    }
-  }
+    };
+  };
 
   Plugin.prototype.vmouseup = function(event) {
     if (this._clickContext.downPt === null) {
@@ -1259,7 +1260,7 @@
     event.preventDefault();
 
     return true;
-  }
+  };
 
   Plugin.prototype.initPager = function() {
     var PAGER_HEIGHT = 24;
@@ -1285,20 +1286,20 @@
     var idx = $elem.children(CLASS_CURRENT).index();
     var $currentA = $pager.children('.dot');
     $currentA.eq(idx).addClass("current");
-  }
+  };
 
   Plugin.prototype.setPagerPos = function(pageIdx) {
     var $elem = $(this.element);
     $elem.find('.pager span.dot.current').removeClass("current");
     $elem.find('.pager span.dot').eq(pageIdx).addClass("current");
-  }
+  };
 
   Plugin.prototype.pagerTap = function(event) {
     // check position
     var $elem = $(this.element);
 
     var $pager = $elem.children('.pager');
-    var pagerWidth = $pager.width();
+    var pagerWidth = $pager.outerWidth();
 
     var forwardDir = this.options.forwardDir;
     var mouse = this._getClientMousePos(event);
@@ -1309,7 +1310,7 @@
       // forward
       this.flipNext();
     }
-  }
+  };
 
 
   Plugin.prototype._isAccessFromMobileBrowser = function() {
@@ -1323,7 +1324,7 @@
     }
 
     return false;
-  }
+  };
 
   Plugin.prototype.init = function() {
     //
@@ -1464,7 +1465,7 @@
         $.data(this, 'plugin_' + pluginName, instance);
       }
     });
-  }
+  };
 
   // bind
   $(document).bind('pageinit create', function(e) {
