@@ -34,6 +34,7 @@
     forwardDir: DIR_RTOL,     // "ltor" | "rtol" | "ttob" | "btot"
     height: '',               // height string "" means auto
     keyboardNav: true,        // flag to do support keyboard naviation
+    mouseNav: true,	          // flag to support mouse D&D
     showPager: false,         // flag to show pager
     loop: false               // flag for loop conte
   };
@@ -1396,31 +1397,34 @@
 
       // attach event handler
       var $pager = $elem.children('.pager');
-      $pager.bind(mousedown, function(event) {
-        event.preventDefault();
-        return false;
-      });
-
-      $pager.bind(mouseup, function(event) {
-        _this.pagerTap(event);
-        event.preventDefault();
-        return false;
-      });
-
+      
+      if(this.options.mouseNav){
+	      $pager.bind(mousedown, function(event) {
+	        event.preventDefault();
+	        return false;
+	      });
+	
+	      $pager.bind(mouseup, function(event) {
+	        _this.pagerTap(event);
+	        event.preventDefault();
+	        return false;
+	      });
+       }
     }
 
-    $(this.element).bind(mousedown, function(event) {
-      return _this.vmousedown(event);
-    });
-
-    $(this.element).bind(mousemove, function(event) {
-      return _this.vmousemove(event);
-    });
-
-    $(this.element).bind(mouseup, function(event) {
-      return _this.vmouseup(event);
-    });
-
+    if(this.options.mouseNav){
+	    $(this.element).bind(mousedown, function(event) {
+	      return _this.vmousedown(event);
+	    });
+	
+	    $(this.element).bind(mousemove, function(event) {
+	      return _this.vmousemove(event);
+	    });
+	
+	    $(this.element).bind(mouseup, function(event) {
+	      return _this.vmouseup(event);
+	    });
+    }
     // -------------------------------------------------
     // add keyboard hook
     if (this.options.keyboardNav) {
