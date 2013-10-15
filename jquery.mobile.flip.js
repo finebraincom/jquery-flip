@@ -962,7 +962,7 @@
     }
 
     // Mozilla 11.0 or newer
-    if (ua.mozilla && parseInt(ua.version.slice(0, 2), 10) > 10) {
+    if (ua.mozilla && parseInt(String(ua.version).slice(0, 2), 10) > 10) {
       return true;
     }
 
@@ -1333,7 +1333,7 @@
     var ua = $.browser;
     if (ua.webkit) {
       CSSPREFIX = 'webkit';
-    } else if (ua.mozilla && parseInt(ua.version.slice(0, 2), 10) > 10) {
+    } else if (ua.mozilla && parseInt(String(ua.version).slice(0, 2), 10) > 10) {
       CSSPREFIX = 'Moz';
     }
 
